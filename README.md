@@ -9,7 +9,7 @@
 * Documentation: none provided by upstream, read the presentation; other ports have better documentation
 
 
-This package has Python bindings which target Python 2.7.  You can also use it as a C++ library.
+This package has Python bindings which target Python >= 2.7 (also >= 3). You can also use it as a C++ library.
 
 In Python code, `import s2`.
 
@@ -34,25 +34,17 @@ Other dependencies will need to be installed with MacPorts using the `+universal
 
 Make sure `/opt/local/bin` and `/Library/Frameworks/Python.framework/Versions/2.7/bin` are not only listed in `$PATH`, but also in `/etc/paths` before `/usr/bin` (otherwise Python bindings will fail to build).
 
+If you installed OpenSSL with `brew`, add the env variable before cmake: `export OPENSSL_ROOT_DIR=/usr/local/Cellar/openssl/<version>/`
+
 ## Building
-### The Linux From Scratch way (also for OSX)
+### The Linux From Scratch way (also for OSX). This will also install the Python bindings.
 
 ```console
-cd geometry
-cmake .
-make -j3
-sudo make install
+mkdir build
+cd build
+cmake -DCMAKE_INSTALL_PREFIX=../install ../geometry
+make install -j4
 ```
-
-Then to install Python 2.7 bindings:
-
-```console
-cd python
-cmake .
-make
-sudo make install
-```
-
 
 ### As a Debian package
 
@@ -80,4 +72,3 @@ dpkg -i ../libs2*.deb ../python-s2*.deb
 ```console
 python test.py
 ```
-

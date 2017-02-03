@@ -1,12 +1,8 @@
-cmake_minimum_required(VERSION 3.1.0 FATAL_ERROR)
-
-if (NOT EXISTS "googletest/googletest/CMakeLists.txt")
+if (NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/googletest/googletest/CMakeLists.txt")
 	message(FATAL_ERROR "Cannot find googletest directory.")
 endif()
 
 include_directories(
-	../s2
-	..
 	googletest/googletest
 	googletest/googletest/include
 )
@@ -55,4 +51,3 @@ target_link_libraries(tests s2 s2util s2cellid gtest_main pthread)
 add_custom_target(check
 	COMMAND tests
 )
-

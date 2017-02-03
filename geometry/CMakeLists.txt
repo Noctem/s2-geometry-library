@@ -136,6 +136,24 @@ set(s2includes_util_math
 	util/math/vector4-inl.h
 )
 
+include( GNUInstallDirs )
+
+set( BUILD_SHARED_LIBS ON )
+
+# set RPATH stuff
+set( CMAKE_SKIP_RPATH FALSE )
+# use, i.e. don't skip the full RPATH for the build tree
+set( CMAKE_SKIP_BUILD_RPATH FALSE )
+# on OS X
+set( CMAKE_MACOSX_RPATH ON )
+
+# when building, don't use the install RPATH already
+# (but later on when installing)
+set( CMAKE_BUILD_WITH_INSTALL_RPATH FALSE )
+
+# set the rpath only when installed
+set( CMAKE_INSTALL_RPATH ${CMAKE_INSTALL_FULL_LIBDIR} )
+
 add_library(s2util SHARED ${s2util_files})
 target_link_libraries(s2util ${OPENSSL_LIBRARIES})
 
@@ -146,9 +164,13 @@ add_library(s2 SHARED ${s2_files})
 target_link_libraries(s2 s2cellid s2util ${OPENSSL_LIBRARIES} pthread)
 
 install(TARGETS s2util s2cellid s2
-	LIBRARY DESTINATION lib
-	ARCHIVE DESTINATION lib
+	LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+	ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
 )
+
+add_subdirectory(python)
+add_subdirectory(tests)
+
 
 CONFIGURE_FILE(
 	${CMAKE_CURRENT_SOURCE_DIR}/s2.pc.in
@@ -163,13 +185,12 @@ CONFIGURE_FILE(
 )
 
 # Install header files
-install(FILES ${s2includes} DESTINATION include/s2)
-install(FILES ${s2includes_base} DESTINATION include/s2/base)
-install(FILES ${s2includes_strings} DESTINATION include/s2/strings)
-install(FILES ${s2includes_util_coding} DESTINATION include/s2/util/coding)
-install(FILES ${s2includes_util_endian} DESTINATION include/s2/util/endian)
-install(FILES ${s2includes_util_hash} DESTINATION include/s2/util/hash)
-install(FILES ${s2includes_util_math} DESTINATION include/s2/util/math)
-install(FILES ${CMAKE_BINARY_DIR}/s2.pc DESTINATION lib/pkgconfig)
-install(FILES ${CMAKE_BINARY_DIR}/s2cellid.pc DESTINATION lib/pkgconfig)
-
+install(FILES ${s2includes} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/s2)
+install(FILES ${s2includes_base} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/s2/base)
+install(FILES ${s2includes_strings} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/s2/strings)
+install(FILES ${s2includes_util_coding} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/s2/util/coding)
+install(FILES ${s2includes_util_endian} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/s2/util/endian)
+install(FILES ${s2includes_util_hash} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/s2/util/hash)
+install(FILES ${s2includes_util_math} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/s2/util/math)
+install(FILES ${CMAKE_BINARY_DIR}/s2.pc DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
+install(FILES ${CMAKE_BINARY_DIR}/s2cellid.pc DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
