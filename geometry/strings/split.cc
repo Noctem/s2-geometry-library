@@ -119,12 +119,14 @@ namespace std {
 
 #if defined(__GNUC__)
 // Use our nice hash function for strings
+#ifndef __APPLE__
 template<class _CharT, class _Traits, class _Alloc>
 struct hash<basic_string<_CharT, _Traits, _Alloc> > {
   size_t operator()(const basic_string<_CharT, _Traits, _Alloc>& k) const {
     return HashTo32(k.data(), static_cast<uint32>(k.length()));
   }
 };
+#endif // __APPLE__
 
 // they don't define a hash for const string at all
 template<> struct hash<const string> {
